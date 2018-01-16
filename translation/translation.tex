@@ -1,0 +1,19 @@
+\documentclass{ctexart}
+
+\title{基于暗通道先验的单一图像去雾算法}
+\author{Kaiming He, Jian Sun, and Xiaoou Tang, \emph{Fellow}, \emph{IEEE}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾霾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
+\end{abstract}
+
+中文English \cite{koschmieder1924phys}
+\[E = m c^2\]
+
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}

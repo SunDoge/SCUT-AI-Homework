@@ -1,0 +1,20 @@
+H. Koschmieder, “Theorie der Horizontalen Sichtweite,” Beitr. Phys. Freien Atm., vol. 12, pp. 171-181, 1924.
+S.G. Narasimhan and S.K. Nayar, “Vision and the Atmosphere,” Int’l J. Computer Vision, vol. 48, pp. 233-254, 2002.
+Y.Y. Schechner, S.G. Narasimhan, and S.K. Nayar, “Instant Dehazing of Images Using Polarization,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, vol. 1, pp. 325-332, 2001.
+S. Shwartz, E. Namer, and Y.Y. Schechner, “Blind Haze Separa- tion,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, vol. 2, pp. 1984-1991, 2006.
+S.G. Narasimhan and S.K. Nayar, “Chromatic Framework for Vision in Bad Weather,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, vol. 1, pp. 598-605, June 2000.
+S.K. Nayar and S.G. Narasimhan, “Vision in Bad Weather,” Proc. Seventh IEEE Int’l Conf. Computer Vision, vol. 2, pp. 820-827, 1999. 
+S.G. Narasimhan and S.K. Nayar, “Contrast Restoration of Weather Degraded Images,” IEEE Trans. Pattern Analysis and Machine Intelligence, vol. 25, no. 6 pp. 713-724, June 2003.
+J. Kopf, B. Neubert, B. Chen, M. Cohen, D. Cohen-Or, O. Deussen, M. Uyttendaele, and D. Lischinski, “Deep Photo: Model-Based Photograph Enhancement and Viewing,” ACM Trans. Graphics, vol. 27, no. 5, pp. 116:1-116:10, 2008.
+S.G. Narasimhan and S.K. Nayar, “Interactive Deweathering of an Image Using Physical Models,” Proc. IEEE Workshop Color and Photometric Methods in Computer Vision, in Conjunction with IEEE Int’l Conf. Computer Vision, Oct. 2003.
+R. Fattal, “Single Image Dehazing,” Proc. ACM SIGGRAPH ’08, 2008.
+R. Tan, “Visibility in Bad Weather from a Single Image,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, June 2008.
+P. Chavez, “An Improved Dark-Object Subtraction Technique for Atmospheric Scattering Correction of Multispectral Data,” Remote Sensing of Environment, vol. 24, pp. 450-479, 1988.
+E.B. Goldstein, Sensation and Perception. Cengage Learning 1980. 
+A.J. Preetham, P. Shirley, and B. Smits, “A Practical Analytic Model for Daylight,” Proc. ACM SIGGRAPH ’99, 1999.
+A.L. Gilchrist and A. Jacobsen, “Lightness Constancy through a Veiling Luminance,” J. Experimental Psychology: Human Perception and Performance, vol. 9, no. 6, pp. 936-944, 1983.
+A. Levin, D. Lischinski, and Y. Weiss, “A Closed Form Solution to Natural Image Matting,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, vol. 1, pp. 61-68, 2006.
+I. Omer and M. Werman, “Color Lines: Image Specific Color Representation,” Proc. IEEE Conf. Computer Vision and Pattern Recognition, vol. 2, pp. 946-953, June 2004.
+E. Hsu, T. Mertens, S. Paris, S. Avidan, and F. Durand, “Light Mixture Estimation for Spatially Varying White Balance,” Proc. ACM SIGGRAPH ’08, 2008.
+C. Tomasi and R. Manduchi, “Bilateral Filtering for Gray and Color Images,” Proc. Sixth IEEE Int’l Conf. Computer Vision, p. 839, 1998.
+M. van Herk, “A Fast Algorithm for Local Minimum and Maximum Filters on Rectangular and Octagonal Kernels,” Pattern Recognition Letters, vol. 13, pp. 517-521, 1992.
