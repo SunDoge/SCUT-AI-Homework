@@ -113,6 +113,55 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 造成暗通道的低强度值的因素主要有三个：a）阴影，比如汽车、建筑物和城市中玻璃窗户的阴影，或者是树叶、树与岩石等自然景观的投影；b）色彩鲜艳的物体或表面，比如在任何通道中的反射值都很低（比如绿色的草地、树、植物，红色或黄色的花朵、叶子，或者蓝色的水面）；c）颜色较暗的物体或者表面，例如灰暗色的树干和石头。总之，自然的户外景物中到处都是阴影或者彩色，这些景物的图像的暗通道总是很灰暗的！\par
 
+为了验证暗原色先验的表现有多好，我们从Flickr.com 和其他一些图片搜索引擎上使用Flickr用户标记的150个最热门的标签，收集了一个户外图像的数据库，因为雾主要出现在户外景物或者城市中，我们从下载到的图像中主要选出了这两部分景区的无雾图像。另外，我们只研究了白天的图像。我们随机选取了5,000张图像并手工去掉了包括天空区域的部分。它们均被缩放成最大长宽都是500像素的大小，用$15 \times 15$的步长计算出暗通道。图\ref{fig:04}显示了几幅户外图像以及相应的暗通道。\par
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=\textwidth]{img/04.png}
+    \caption{(a) Example images in our haze-free image database. (b) The corresponding dark channels. (c) A hazy image and its dark channel.}
+    \label{fig:04}
+\end{figure}
+
+\begin{figure}[bp]
+    \centering
+    \includegraphics[width=\textwidth]{img/05.png}
+    \caption{Statistics of the dark channels. (a) Histogram of the intensity of the pixels in all of the 5,000 dark channels (each bin stands for 16 intensity levels). (b) Cumulative distribution. (c) Histogram of the average intensity of each dark channel.}
+    \label{fig:05}
+\end{figure}
+
+图\ref{fig:05}a是超过5,000幅图像的暗通道强度直方图，图\ref{fig:05}b是相应的累计直方图。我们可以看到暗通道当中约有75\%的像素强度值为零，大概90\%的像素强度值低于25。该统计结果强有力地支持了暗通道先验的合理性。我们同时还计算了每幅图像暗通道像素的平均强度值，其直方图如图\ref{fig:05}所示。同样，大多的暗通道都具有比较低的平均强度值。这就意味着只有极少数的户外无雾图像不符合我们的先验规律。\par
+
+由于附加的大气光，图像被雾干扰之后往往要比其本身亮度更大，透射率$t$一般较小。所以被浓雾覆盖的图像的暗通道具有较高的强度值（见图\ref{fig:04}右手边）。视觉上来看，暗通道强度值是雾浓度的粗略近似。在下一部分，我们将利用这一性质来估算透射和大气光。\par
+
+可以看到，我们忽视了天空区域，因为该处无雾图像的暗通道具有较高的强度值。幸好，可以利用雾图生成模型\ref{equ:1}结合我们所提出的先验优雅地处理天空区域。没有必要特意去除天空区域，我们将在\ref{sec:4.1}章讨论这个问题。\par
+
+我们的暗通道先验的一定程度上受到了众所周知的广泛用于多光谱传感系统的黑体减法（dark-object subtraction）技术\cite{Chavez1988}的启发。在\cite{Chavez1988}中，通过减去场景中最暗物体所对应的一个常数来去除空间各向同性的雾。我们从这个想法中归纳得到了新的自然风景图去雾的途径。\par
+
+
+
+\section{使用暗通道先验去雾}
+
+    \subsection{估算透射率}\label{sec:4.1}
+    我们首先假设大气光$A$是给定的，在\ref{sec:4.3}章我们会展示一种自动评估大气光的途径。我们先用$A$正则化雾图生成方程\ref{equ:1}：
+
+    \begin{equation}\label{equ:7}
+        \frac{I^c(x)}{A^c} = t(x)\frac{J^c(x)}{A^c}  + 1 - t(x),
+    \end{equation}
+
+    注意到我们对每个颜色通道分别做正则化。\par
+
+    \subsection{软抠图（Soft Matting）} %这里还是不翻译比较好
+
+    \subsection{估算大气光}\label{sec:4.3}
+
+    \subsection{复原场景光线}
+
+    \subsection{窗口大小}
+
+
+\section{实验结果}
+
+\section{讨论}
 
 
 \bibliographystyle{unsrt}
