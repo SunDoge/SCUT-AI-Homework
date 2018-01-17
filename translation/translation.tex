@@ -10,7 +10,7 @@
 \maketitle
 
 \begin{abstract}
-    在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾霾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
+    在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
 
     \textbf{关键词:} Dehaze, defog, image restoration, depth estimation.
 \end{abstract}
@@ -24,15 +24,62 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 最近，基于单一图像的去雾取得了很大的进展\cite{Fattal2008}，\cite{Tan2008}。这些方法的成功得益于更强的先验和假设。Tan\cite{Tan2008}观察到无雾图像比有雾图像具有更高的对比度，他通过扩大复原图像的局部对比度来达到去雾的效果。这样得到的结果在视觉上是很吸引人的，但可能不是实际有效的。Fattal\cite{Fattal2008}通过假设透射率和表面投影在局部是不相关的，估算景物的反照率（albedo）和介质透射率（medium transmission）。这个方法是实际有效的，可以得到令人印象深刻的结果。然而他的方法在雾霾浓度较大的时候显得无能为力，而且在假设不成立的情况下可能会失败。\par
 
+在这篇文章，我们提出一种新的先验规律——暗通道先验，来实现单一图像去雾。暗通道先验是基于户外无雾图像的统计得出的规律。我们发现，在不包括天空的绝大部分局部区域，总会存在一些像素（我们称之为“sdark pixels”），至少在一个颜色通道上具有很低的强度值。在有雾图像中，这些颜色通道中的暗像素的强度来自于大气光。因此，这些暗像素能够直接用来评估雾的透射率。结合一个雾成像模型和soft matting插值法，我们可以修复出高质量的去雾图像并得到很好的深度图。\par
 
+我们实现的去雾不仅是实际有效的，而且能够处理在雾浓度很大情况下的远距离物体。我们没有依靠透射率或表面投影的显著变化。结果基本没有光晕。\par
 
+和任何其他利用强假设的算法一样，我们的方法也存在限制。当取景对象本身颜色与大气光相似（比如雪地或白墙），暗原色先验将失效。尽管我们的方法对大多数户外有雾图像有效，在一些极限情况下还是会失效。幸运的是，在那些特定场景下去雾的需求不是很强烈，因为那些时候很少看见雾。我们相信，从不同的角度来发展这一新的先验，并将他们组合起来，会进一步推动这一工作的发展。\par
 
-\begin{figure}[htbp]
+\begin{figure}[tbp]
     \centering
     \includegraphics[width=\textwidth]{img/02.png}
     \caption{Haze removal using a single image. (a) Input hazy image. (b) Image after haze removal by our approach. (c) Our recovered depth map.}
     \label{fig:01}
 \end{figure}
+
+
+\section{背景}
+在计算机视觉和计算机图形学中，下述模型\cite{NarasimhanNayar2002}，\cite{NarasimhanNayar2000}，\cite{Fattal2008}，\cite{Tan2008}，广泛用于描述有雾图像的形成：
+
+\begin{equation}\label{equ:1}
+    I(x) = J(x)t(x) + A(1 - t(x)),
+\end{equation}
+
+其中$I$是指观测强度，$J$是景物光线强度，$A$是全球大气光，$t$是介质透射率，用来描述到照相机过程中没有被散射的部分光线。去雾的目标就是从$I$中复原$J$，$A$，$t$。对于一个有\emph{N}个像素的彩色图像$I$来说，存在3\emph{N}的已知项和$4\emph{N}+3$的未知项。这就使得雾霾的去除问题变得模糊不清。\par
+
+在\ref{equ:1}中，右边第一项$J(x)t(x)$叫做\emph{直接衰减项}\cite{Tan2008}，第二项$A(1 - t(x))$叫做\emph{大气光}\cite{Koschmieder1924}，\cite{Tan2008}。直接衰减项描述景物光线，并在介质中衰减，大气光来源于先前散射的光线，并导致色偏。直接衰减项是景物光线的\emph{乘性}失真时，大气光则是\emph{加性}失真。\par
+
+当大气光均匀时，透射率$t$可表达为：
+
+\begin{equation}\label{equ:2}
+    t(x) = e^{-\beta d(x)},
+\end{equation}
+
+其中$\beta$是大气的散射系数，$d$是场景深度。该式表明景物光线是随着景深按指数衰减的。如果我们可以恢复出透射率，我们就可以恢复出未知范围内的景深。\par
+
+从几何学来看，雾图方程\ref{equ:1}意味着，在RGB色彩空间中，向量$A$，$J(x)$，$I(x)$是共面的，它们的端点则是共线的，透射系数$t$是两条线段长度之比：
+
+\begin{equation}\label{equ:3}
+    t(x) = \frac{\| A - I(x) \|}{\| A - J(x) \|} = \frac{A^c - I^c(x)}{A^c - J^c(x)},
+\end{equation}
+
+其中$c \in \{r, g, b\} $为颜色通道索引。\par
+
+\begin{figure}[bp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/01.png}
+    \caption{(a) Haze imaging model. (b) Constant albedo model used in Fattal’s work [10].}
+    \label{fig:02}
+\end{figure}
+
+基于这个模型，Tan的方法\cite{Tan2008}主要关注增强图像的能见度上。在透射率$t$可近似看作不变的区域内，由于$t<1$,输入图像的能见度（梯度之和）在雾的干扰之下减少：
+
+\begin{equation}\label{equ:4}
+    \sum_x \| \nabla I(x) \| = t \sum_x \| \nabla J(x) \| < \sum_x \| \nabla J(x) \|,
+\end{equation}
+
+
+
 
 
 \bibliographystyle{unsrt}
