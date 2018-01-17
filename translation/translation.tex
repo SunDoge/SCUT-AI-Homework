@@ -11,9 +11,9 @@
 \maketitle
 
 \begin{abstract}
-    在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
-
-    \textbf{关键词:} Dehaze, defog, image restoration, depth estimation.
+	在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
+			
+	\textbf{关键词:} Dehaze, defog, image restoration, depth estimation.
 \end{abstract}
 
 \section{引言}
@@ -32,10 +32,9 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 和任何其他利用强假设的算法一样，我们的方法也存在限制。当取景对象本身颜色与大气光相似（比如雪地或白墙），暗原色先验将失效。尽管我们的方法对大多数户外有雾图像有效，在一些极限情况下还是会失效。幸运的是，在那些特定场景下去雾的需求不是很强烈，因为那些时候很少看见雾。我们相信，从不同的角度来发展这一新的先验，并将他们组合起来，会进一步推动这一工作的发展。\par
 
 \begin{figure}[tbp]
-    \centering
-    \includegraphics[width=\textwidth]{img/02.png}
-    \caption{Haze removal using a single image. (a) Input hazy image. (b) Image after haze removal by our approach. (c) Our recovered depth map.}
-    \label{fig:01}
+	\centering
+	\includegraphics[width=\textwidth]{img/02.png}
+	\caption{Haze removal using a single image. (a) Input hazy image. (b) Image after haze removal by our approach. (c) Our recovered depth map.}\label{fig:01}
 \end{figure}
 
 
@@ -43,7 +42,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 在计算机视觉和计算机图形学中，下述模型\cite{NarasimhanNayar2002}，\cite{NarasimhanNayar2000}，\cite{Fattal2008}，\cite{Tan2008}，广泛用于描述有雾图像的形成：
 
 \begin{equation}\label{equ:1}
-    I(x) = J(x)t(x) + A(1 - t(x)),
+	I(x) = J(x)t(x) + A(1 - t(x)),
 \end{equation}
 
 其中$I$是指观测强度，$J$是景物光线强度，$A$是全球大气光，$t$是介质透射率，用来描述到照相机过程中没有被散射的部分光线。去雾的目标就是从$I$中复原$J$，$A$，$t$。对于一个有\emph{N}个像素的彩色图像$I$来说，存在3\emph{N}的已知项和$4\emph{N}+3$的未知项。这就使得雾霾的去除问题变得模糊不清。\par
@@ -53,7 +52,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 当大气光均匀时，透射率$t$可表达为：
 
 \begin{equation}\label{equ:2}
-    t(x) = e^{-\beta d(x)},
+	t(x) = e^{-\beta d(x)},
 \end{equation}
 
 其中$\beta$是大气的散射系数，$d$是场景深度。该式表明景物光线是随着景深按指数衰减的。如果我们可以恢复出透射率，我们就可以恢复出未知范围内的景深。\par
@@ -61,27 +60,26 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 从几何学来看，雾图方程\ref{equ:1}意味着，在RGB色彩空间中，向量$A$，$J(x)$，$I(x)$是共面的，它们的端点则是共线的，透射系数$t$是两条线段长度之比：
 
 \begin{equation}\label{equ:3}
-    t(x) = \frac{\| A - I(x) \|}{\| A - J(x) \|} = \frac{A^c - I^c(x)}{A^c - J^c(x)},
+	t(x) = \frac{\| A - I(x) \|}{\| A - J(x) \|} = \frac{A^c - I^c(x)}{A^c - J^c(x)},
 \end{equation}
 
 其中$c \in \{r, g, b\} $为颜色通道索引。\par
 
 \begin{figure}[bp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{img/01.png}
-    \caption{(a) Haze imaging model. (b) Constant albedo model used in Fattal’s work \cite{Fattal2008}.}
-    \label{fig:02}
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/01.png}
+	\caption{(a) Haze imaging model. (b) Constant albedo model used in Fattal’s work\cite{Fattal2008}.}\label{fig:02}
 \end{figure}
 
 基于这个模型，Tan的方法\cite{Tan2008}主要关注增强图像的能见度上。在透射率$t$可近似看作不变的区域内，由于$t<1$,输入图像的能见度（梯度之和）在雾的干扰之下减少：
 
 \begin{equation}\label{equ:4}
-    \sum_x \| \nabla I(x) \| = t \sum_x \| \nabla J(x) \| < \sum_x \| \nabla J(x) \|,
+	\sum_x \| \nabla I(x) \| = t \sum_x \| \nabla J(x) \| < \sum_x \| \nabla J(x) \|,
 \end{equation}
 
 在一个局部区域内，透射率$t$是通过扩大图像可见度并且使对比度满足$J(x)$的强度低于$A$的方法来估计的。一个MRF模型被用来进一步规范该结果。这一尝试将进一步揭开雾成像的一些细节和结构上的奥秘。然而，这一方法会产生更大的饱和值，因为它只关注可见度的增强而并没有从物理上去复原原始景物的光线。此外，在靠近深度不连续的位置可能会包含一些光环效应。\par
 
-在\cite{Fattal2008}中，Fattal提出了一种基于独立成分分析(ICA)的方法。首先，局部区域的反照率被假定为一个恒定的向量$R$。因而，在该区域内所有的$J(x)$拥有相同的方向向量$R$，如图\ref{fig:02}b所示。其次，通过假定在一个局部表面投影$\|J(x)\|$和透射率函数$t(x)$在统计学上是相互独立的，可以用ICA来估算$R$。最后，由输入的彩色图像建立的MRF模型可用来推断整幅图像的结果。这一实现手段是基于物理的并能产生自然的无雾图像和一幅优质的深度图。不足的是，该手段因为利用了一个局部区域的统计学独立的假设，需要在相互独立的成分之间差异很大的时候才能有显著效果。任意差异性的缺乏或者过低的信噪比（通常出现在浓雾图）都会使得统计结果不可靠。还有，统计规律是根据图像的颜色信息得出的，因此对灰度图像无效。面对无色的浓度较大雾时，该方法也无能为力。\par
+在\cite{Fattal2008}中，Fattal提出了一种基于独立成分分析（ICA）的方法。首先，局部区域的反照率被假定为一个恒定的向量$R$。因而，在该区域内所有的$J(x)$拥有相同的方向向量$R$，如图\ref{fig:02}b所示。其次，通过假定在一个局部表面投影$\|J(x)\|$和透射率函数$t(x)$在统计学上是相互独立的，可以用ICA来估算$R$。最后，由输入的彩色图像建立的MRF模型可用来推断整幅图像的结果。这一实现手段是基于物理的并能产生自然的无雾图像和一幅优质的深度图。不足的是，该手段因为利用了一个局部区域的统计学独立的假设，需要在相互独立的成分之间差异很大的时候才能有显著效果。任意差异性的缺乏或者过低的信噪比（通常出现在浓雾图）都会使得统计结果不可靠。还有，统计规律是根据图像的颜色信息得出的，因此对灰度图像无效。面对无色的浓度较大雾时，该方法也无能为力。\par
 
 在下一章，我们将展示一种新的先验规律——暗通道先验，并用来直接评估户外有雾图像的透射率。\par
 
@@ -91,22 +89,21 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 为了用公式描述这个发现，对于一幅图像$J$，我们定义\emph{暗通道}的概念。对于特定图像$J$，它的暗通道$J^{dark}$取决于
 
 \begin{equation}\label{equ:5}
-    J^{dark}(x) = \min_{y \in \Omega(x)}\Big(\min_{c \in \{ r, g, b\}} J^c(x)\Big),
+	J^{dark}(x) = \min_{y \in \Omega(x)}\Big(\min_{c \in \{ r, g, b\}} J^c(x)\Big),
 \end{equation}
 
-其中$J^c$代表$J$的某一个颜色通道，而$\Omega(x)$是以$x$为中心的一块方形区域。暗通道由两个求最小值操作得出：$\min_{c \in \{ r, g, b\}}$对应每个像素（图\ref{fig:03}b），$\min_{y \in \Omega(x)}$是一个最小值过滤器（MinFilter，图\ref{fig:03}c）。两个求最小值操作可交换。\par
+其中$J^c$代表$J$的某一个颜色通道，而$\Omega(x)$是以$x$为中心的一块方形区域。暗通道由两个求最小值运算得出：$\min_{c \in \{ r, g, b\}}$对应每个像素（图\ref{fig:03}b），$\min_{y \in \Omega(x)}$是一个最小值过滤器（MinFilter，图\ref{fig:03}c）。两个求最小值运算可交换。\par
 
 \begin{figure}[tbp]
-    \centering
-    \includegraphics[width=\textwidth]{img/03.png}
-    \caption{Calculation of a dark channel. (a) An arbitrary image $J$. (b) For each pixel, we calculate the minimum of its (r, g, b) values. (c) A minimum filter is performed on (b). This is the dark channel of $J$. The image size is 800 $\times$ 551, and the patch size of $\Omega$ is 15 $\times$ 15.}
-    \label{fig:03}
+	\centering
+	\includegraphics[width=\textwidth]{img/03.png}
+	\caption{Calculation of a dark channel. (a) An arbitrary image $J$. (b) For each pixel, we calculate the minimum of its (r, g, b) values. (c) A minimum filter is performed on (b). This is the dark channel of $J$. The image size is 800 $\times$ 551, and the patch size of $\Omega$ is 15 $\times$ 15.}\label{fig:03}
 \end{figure}
 
 使用暗通道的概念，我们观察得出，如果$J$是户外的无雾图像，除了天空方位，$J$的暗通道强度总是很低并且趋近于零。
 
 \begin{equation}\label{equ:6}
-    J^{dark} \to 0
+	J^{dark} \to 0
 \end{equation}
 
 我们把这一发现称为\emph{暗通道先验}。\par
@@ -116,17 +113,15 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 为了验证暗原色先验的表现有多好，我们从Flickr.com 和其他一些图片搜索引擎上使用Flickr用户标记的150个最热门的标签，收集了一个户外图像的数据库，因为雾主要出现在户外景物或者城市中，我们从下载到的图像中主要选出了这两部分景区的无雾图像。另外，我们只研究了白天的图像。我们随机选取了5,000张图像并手工去掉了包括天空区域的部分。它们均被缩放成最大长宽都是500像素的大小，用$15 \times 15$的步长计算出暗通道。图\ref{fig:04}显示了几幅户外图像以及相应的暗通道。\par
 
 \begin{figure}[tbp]
-    \centering
-    \includegraphics[width=\textwidth]{img/04.png}
-    \caption{(a) Example images in our haze-free image database. (b) The corresponding dark channels. (c) A hazy image and its dark channel.}
-    \label{fig:04}
+	\centering
+	\includegraphics[width=\textwidth]{img/04.png}
+	\caption{(a) Example images in our haze-free image database. (b) The corresponding dark channels. (c) A hazy image and its dark channel.}\label{fig:04}
 \end{figure}
 
 \begin{figure}[bp]
-    \centering
-    \includegraphics[width=\textwidth]{img/05.png}
-    \caption{Statistics of the dark channels. (a) Histogram of the intensity of the pixels in all of the 5,000 dark channels (each bin stands for 16 intensity levels). (b) Cumulative distribution. (c) Histogram of the average intensity of each dark channel.}
-    \label{fig:05}
+	\centering
+	\includegraphics[width=\textwidth]{img/05.png}
+	\caption{Statistics of the dark channels. (a) Histogram of the intensity of the pixels in all of the 5,000 dark channels (each bin stands for 16 intensity levels). (b) Cumulative distribution. (c) Histogram of the average intensity of each dark channel.}\label{fig:05}
 \end{figure}
 
 图\ref{fig:05}a是超过5,000幅图像的暗通道强度直方图，图\ref{fig:05}b是相应的累计直方图。我们可以看到暗通道当中约有75\%的像素强度值为零，大概90\%的像素强度值低于25。该统计结果强有力地支持了暗通道先验的合理性。我们同时还计算了每幅图像暗通道像素的平均强度值，其直方图如图\ref{fig:05}所示。同样，大多的暗通道都具有比较低的平均强度值。这就意味着只有极少数的户外无雾图像不符合我们的先验规律。\par
@@ -141,22 +136,87 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \section{使用暗通道先验去雾}
 
-    \subsection{估算透射率}\label{sec:4.1}
-    我们首先假设大气光$A$是给定的，在\ref{sec:4.3}章我们会展示一种自动评估大气光的途径。我们先用$A$正则化雾图生成方程\ref{equ:1}：
+\subsection{估算透射率}\label{sec:4.1}
+我们首先假设大气光$A$是给定的，在\ref{sec:4.3}章我们会展示一种自动评估大气光的途径。我们先用$A$正则化雾图生成方程\ref{equ:1}：
 
-    \begin{equation}\label{equ:7}
-        \frac{I^c(x)}{A^c} = t(x)\frac{J^c(x)}{A^c}  + 1 - t(x),
-    \end{equation}
+\begin{equation}\label{equ:7}
+	\frac{I^c(x)}{A^c} = t(x)\frac{J^c(x)}{A^c}  + 1 - t(x),
+\end{equation}
 
-    注意到我们对每个颜色通道分别做正则化。\par
+注意到我们对每个颜色通道分别做正则化。\par
 
-    \subsection{软抠图（Soft Matting）} %这里还是不翻译比较好
+我们进一步假设在局部区域的$\Omega(x)$是常数。我们用$\tilde{t}(x)$来表示这个透射率，然后我们在等式\ref{equ:7}的两边同时计算暗通道，两边都求最小值：
 
-    \subsection{估算大气光}\label{sec:4.3}
+\begin{equation}\label{equ:8}
+	\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c}) = \tilde{t}(x) \min_{y \in \Omega(x)} (\min_c \frac{J^c(y)}{A^c}) + 1 - \tilde{t}(x)
+\end{equation}
 
-    \subsection{复原场景光线}
+因为$\tilde{t}(x)$在这个区域是一个常数，可以把它放在求最小值运算外。\par
 
-    \subsection{窗口大小}
+因为场景光线$J$是无雾图像，由暗通道先验可知$J$的暗通道接近于零：
+
+\begin{equation}\label{equ:9}
+	J^{dark}(x) = \min_{y \in \Omega(x)} (\min_c J^c(y)) = 0,
+\end{equation}
+
+因为$A^c$恒为正，可得：
+
+\begin{equation}\label{equ:10}
+	\min_{y \in \Omega(x)} (\min_c \frac{J^c(y)}{A^c}) = 0
+\end{equation}
+
+把\ref{equ:10}代入\ref{equ:8}，我们可以估算出乘数项并简单估算出透射率$\tilde{t}$
+
+\begin{equation}\label{equ:11}
+	\tilde{t}(x) = 1 - \min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c})
+\end{equation}
+
+事实上，$\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c})$是正则化有雾图像$\frac{I^c(y)}{A^c}$的按通道。它直接提供了透射率的估计值。\par
+
+前面提到，暗通道先验在天空区域不是一个好的先验。幸好，在有雾图像$I$中天空的颜色通常和大气光$A$很相似。所以在天空区域，我们有
+
+\[\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c}) \to 1,\]
+
+同时\ref{equ:11}指出$\tilde{t}(x) \to 0$。因为天空无限远而且透射率确实接近零（见\ref{equ:2}），\ref{equ:11}优雅地同时处理了天空和非天空区域。我们不用事先分离出天空区域。\par
+
+现实中，即使是很晴朗的天气，空气中总会不可避免地包含一些杂质分子。所以当我们看远处的物体时雾依然是存在的。而且，雾的存在是人们感知深度的一个基本线索\cite{Goldstein1980}，\cite{PreethamShirleySmits1999}。这一现象被称为\emph{空间透视}。如果我们彻底地移除雾的存在，图像会看起来不真实，并且深度感可能会丢失。所以我们可以通过在方程\ref{equ:11}中引进一个参数$\omega (0 < \omega \le 1)$，有针对性的保留一部分覆盖遥远景物的雾：
+
+\begin{equation}\label{equ:12}
+	\tilde{t}(x) = 1 - \omega\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c}).
+\end{equation}
+
+这一修正具有优美的特性，对于远处的物体，它能相应地保留更多的雾。$\omega$的值由程序定义。在本文中，我们对所有的处理选取了一个定值0.95。\par
+
+由\ref{equ:11}可导出，暗通道先验对估算雾生成模型\ref{equ:1}中的乘数项（直接透射率）是至关重要的。现在只剩下加数项（大气光）。这个策略和以往的非常依赖乘数项的单图像去雾算法\cite{Fattal2008}，\cite{Tan2008}完全不一样。这个算法受乘数项改变图像对比度\cite{Tan2008}和色彩变化\cite{Fattal2008}的事实驱动。相反，我们注意到加数项改变局部暗像素的强度。借助暗通道先验，乘数项被舍去，而加数项才是估算透射率的关键。我们进一步正则化\ref{equ:1}：
+
+\begin{equation}\label{equ:13}
+	I(x) = J(x)t_1(x) + A(1 - t_2(x)),
+\end{equation}
+
+其中$t_1$和$t_2$没有必要相同。通过提取\ref{equ:11}的方法，我们可以估算$t_2$因而分解加数项。问题被化简为乘法形式$(J(x)t_1)$，并且其他的约束和先验可以用于进一步解开这一项。在人眼视觉的研究文献\cite{GilchristJacobsen1983}中，加数项被称为\emph{光度耗散}（\emph{veiling luminance}），并且\ref{equ:13}可用于描述透过面纱看到的场景或强烈的炫光。\par
+
+图\ref{fig:06}b展示了通过\ref{equ:12}估算的透射率分布图。图\ref{fig:06}d展示了对应的复原图。我们可以看到暗通道先验在修复鲜艳的颜色和揭示低对比度物体时是有效的。透射率分布图是合理的。主要的问题在于一些光晕和块状痕迹。这是因为透射率在局部区域中并不总是恒定的。在下一章节，我们将通过一种软抠图（soft matting）的方法来完善透射率分布图。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/06.png}
+	\caption{Haze removal. (a) Input hazy images. (b) Estimated transmission maps before soft matting. (c) Refined transmission maps after soft matting. (d), (e) Recovered images using (b) and (c), respectively.}\label{fig:06}
+\end{figure}
+
+
+
+\subsection{软抠图（Soft Matting）} %这里还是不翻译比较好
+我们注意到雾图生成方程\ref{equ:1}和抠图方程在形式上很相似:
+
+\begin{equation}\label{equ:14}
+	I = F \alpha + B (1 - \alpha)
+\end{equation}
+
+\subsection{估算大气光}\label{sec:4.3}
+
+\subsection{复原场景光线}
+
+\subsection{窗口大小}
 
 
 \section{实验结果}
