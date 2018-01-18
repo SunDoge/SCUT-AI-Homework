@@ -12,7 +12,7 @@
 
 \begin{abstract}
 	在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
-			
+				
 	\textbf{关键词:} Dehaze, defog, image restoration, depth estimation.
 \end{abstract}
 
@@ -211,6 +211,38 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 \begin{equation}\label{equ:14}
 	I = F \alpha + B (1 - \alpha)
 \end{equation}
+
+其中$F$和$B$分别是前景和背景色，$\alpha$是前景透明度。雾图方程的透射率分布实际上就是$\alpha$分布。因此，我们可以应用一个形式相似的抠图（matting）\cite{LevinLischinskiWeiss2006}框架来精化透射率。\par
+
+用$t(x)$表示精化透射率分布。把$t(x)$和$\tilde{t}(x)$用向量形式$t$和$\tilde{t}$重写，我们最小化下述损失函数：
+
+\begin{equation}\label{equ:15}
+	E(t) = t^TLt + \lambda(t-\tilde{t})^T(t-\tilde{t}).
+\end{equation}
+
+这里第一项是平滑项，第二项是带权重$\lambda$的数据项。矩阵$L$叫做抠图拉普拉斯矩阵（matting Laplacian matrix）\cite{LevinLischinskiWeiss2006}。它的元素$(i, j)$定义为：
+
+\begin{equation}\label{equ:16}
+	\sum_{k | (i, j) \in w_k}\Big(
+	\delta_{ij} - \frac{1}{|w_k|} \Big(
+	1 + (I_i - \mu_k)^T \big(\sum_k + \frac{\varepsilon}{|w_k|}U_3\big)^{-1} (I_j - \mu_k)
+	\Big)
+	\Big),
+\end{equation}
+
+其中$I_i$和$I_j$是输入图像$I$在像素$i$和$j$处的颜色。$\delta_{ij}$是Kronecker delta，$\mu_k$和$\sum_k$分别是窗口$w_k$中色彩矩阵的平均值和协方差矩阵。$U_3$是一个$3 \times 3$的单位矩阵，$\varepsilon$是修正系数，$|w_k|$是窗口$w_k$中的像素数量。\par
+
+最优的$t$可以通过解下面的稀疏线性系统得到：
+
+\begin{equation}\label{equ:17}
+	(L + \lambda U)t = \lambda \tilde{t},
+\end{equation}
+
+其中$U$是一个和$L$大小相等的单位矩阵。我们给$\lambda$设置一个很小的值（在我们的实验中为10^{-4}），因此$t$被$\tilde{t}$轻微约束。\par
+
+
+
+
 
 \subsection{估算大气光}\label{sec:4.3}
 
