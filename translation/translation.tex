@@ -12,7 +12,7 @@
 
 \begin{abstract}
 	在这篇论文中，我们提出了一个简单但是有效的图像先验规律——暗通道先验来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。它基于一个关键的观察——大多数户外无雾图像存在一些在至少一个颜色通道上强度很低的像素。利用这个先验知识和雾成像模型，我们可以直接估计雾霾的厚度，并还原出高质量的去雾图像。对户外不同有雾图像的处理结果表明了我们提出的先验规律的巨大作用。同时，作为去雾过程中的副产品，我们还能得到高质量的深度图。
-					
+									
 	\textbf{关键词:} Dehaze, defog, image restoration, depth estimation.
 \end{abstract}
 
@@ -33,7 +33,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/02.png}
+	\includegraphics[width=\textwidth]{img/02.jpg}
 	\caption{Haze removal using a single image. (a) Input hazy image. (b) Image after haze removal by our approach. (c) Our recovered depth map.}\label{fig:01}
 \end{figure}
 
@@ -65,9 +65,9 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 其中$c \in \{r, g, b\} $为颜色通道索引。\par
 
-\begin{figure}[bp]
+\begin{figure}[tbp]
 	\centering
-	\includegraphics[width=0.5\textwidth]{img/01.png}
+	\includegraphics[width=0.5\textwidth]{img/01.jpg}
 	\caption{(a) Haze imaging model. (b) Constant albedo model used in Fattal’s work\cite{Fattal2008}.}\label{fig:02}
 \end{figure}
 
@@ -96,7 +96,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/03.png}
+	\includegraphics[width=\textwidth]{img/03.jpg}
 	\caption{Calculation of a dark channel. (a) An arbitrary image $J$. (b) For each pixel, we calculate the minimum of its (r, g, b) values. (c) A minimum filter is performed on (b). This is the dark channel of $J$. The image size is 800 $\times$ 551, and the patch size of $\Omega$ is 15 $\times$ 15.}\label{fig:03}
 \end{figure}
 
@@ -114,13 +114,13 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/04.png}
+	\includegraphics[width=\textwidth]{img/04.jpg}
 	\caption{(a) Example images in our haze-free image database. (b) The corresponding dark channels. (c) A hazy image and its dark channel.}\label{fig:04}
 \end{figure}
 
-\begin{figure}[bp]
+\begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/05.png}
+	\includegraphics[width=\textwidth]{img/05.jpg}
 	\caption{Statistics of the dark channels. (a) Histogram of the intensity of the pixels in all of the 5,000 dark channels (each bin stands for 16 intensity levels). (b) Cumulative distribution. (c) Histogram of the average intensity of each dark channel.}\label{fig:05}
 \end{figure}
 
@@ -199,7 +199,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/06.png}
+	\includegraphics[width=\textwidth]{img/06.jpg}
 	\caption{Haze removal. (a) Input hazy images. (b) Estimated transmission maps before soft matting. (c) Refined transmission maps after soft matting. (d), (e) Recovered images using (b) and (c), respectively.}\label{fig:06}
 \end{figure}
 
@@ -244,7 +244,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 相似形式的matting框架也是被Hsu et al应用。\cite{HsuMertensParisAvidanDurand2008}用来处理空间移变白平衡问题（spatially variant white balance problem）。在\cite{GilchristJacobsen1983}，\cite{OmerWerman2004}约束一些稀疏区域已知，而且这个框架主要用于推导未知区域的值。在我们的程序中，粗约束$\tilde{t}$已经布满整个图片。我们认为这个约束是弱约束，并使用matting框架来优化分布图。\par
 
-解完线性系统(\ref{equ:17})之后，我们在$t$上使用双边滤波器来平滑他的细微纹理。图\ref{fig:06}c展示了使用图\ref{fig:06}b作为约束的优化结果。我们可以看见，光晕和块状痕迹减少了。优化过的透射率分布设法捕捉到不连贯的尖锐边缘并描绘出物体的轮廓。\par
+解完线性系统(\ref{equ:17})之后，我们在$t$上使用双边滤波器\cite{TomasiManduchi1998}来平滑他的细微纹理。图\ref{fig:06}c展示了使用图\ref{fig:06}b作为约束的优化结果。我们可以看见，光晕和块状痕迹减少了。优化过的透射率分布设法捕捉到不连贯的尖锐边缘并描绘出物体的轮廓。\par
 
 \subsection{估算大气光}\label{sec:4.3}
 我们已经假设大气光$A$已知。在这一节，我们提出一种估算$A$的方法。在之前的工作中，最模糊不清的区域被当作$A$\cite{Tan2008}或$A$的初始估计\cite{Fattal2008}。但是，并没有关心如何检查“最模糊不清”的区域。\par
@@ -277,7 +277,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/07.png}
+	\includegraphics[width=\textwidth]{img/07.jpg}
 	\caption{Estimating the atmospheric light. (a) Input image. (b) Dark channel and the most haze-opaque region. (c) The patch from where our method automatically obtains the atmospheric light. (d), (e) Two patches that contain pixels brighter than the atmospheric light.}\label{fig:07}
 \end{figure}
 
@@ -285,9 +285,9 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 这个方法在无限远像素不存在与图像中时也能正常工作。在图\ref{fig:08}b中我们的方法检查出最模糊不清的区域。然而，这些地方的$t$并不接近于零，所以这些区域的颜色可能和$A$不同。幸运的是，$t$在这些最模糊区域很小，所以太阳光的影响很小（见(\ref{equ:21})）。因此这些区域仍然可以很好地估算出$A$。这些图像区域的结果展示在图\ref{fig:08}c。\par
 
-\begin{figure}[bp]
+\begin{figure}[tbp]
 	\centering
-	\includegraphics[width=\textwidth]{img/08.png}
+	\includegraphics[width=\textwidth]{img/08.jpg}
 	\caption{(a) Input image. (b) Dark channel. The red pixels are the most haze-opaque regions detected by our method. (c) Our haze removal result. (d) Fattal’s haze removal result \cite{Fattal2008}.}\label{fig:08}
 \end{figure}
 
@@ -305,13 +305,101 @@ $t_0$的一个典型值是0.1。由于场景光线的亮度通常不及大气光
 
 
 \subsection{窗口大小}
+我们算法中一个关键参数是(\ref{equ:11})中的窗口大小。一方面，暗通道先验在更大的窗口上表现更好，因为窗口包含暗像素的几率增加。我们可以在图\ref{fig:09}中看到这个效果：窗口越大，暗通道越暗。因此(\ref{equ:9})在小窗口上准确率降低，而且复原图容易过饱和（图\ref{fig:10}b）。另一方面，窗口中透射率为常数的假设会变得不再合适。如果窗口过大，景深边缘的光晕会增强（图\ref{fig:10}c）。\par
+
+图\ref{fig:11}展示了不同窗口大小去雾的结果。图片大小为$600 \times  400$。在图\ref{fig:11}b中，窗口大小为$3 \times 3$。一些浅灰色表面的颜色看起来过饱和了（看第一行的建筑和第二、三行的子图）。在图\ref{fig:11}c和\ref{fig:11}d中，窗口大小分别为$15 \times 15$和$30 \times 30$。结果明显比\ref{fig:11}b中的更自然。这表明我们的算法在足够大的窗口下表现良好。soft matting技术可以减少大窗口带来的影响。我们同时注意到，图\ref{fig:11}d的图像看起来比图\ref{fig:11}c的雾更浓一些（特别是在远端），但是差别很小。在这篇论文余下的部分，我们都用$15 \times 15$的窗口。
 
 
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/09.jpg}
+	\caption{A haze-free image ($600 \times  400$) and its dark channels using $3 \times  3$ and $15 \times  15$ patches, respectively.}\label{fig:09}
+\end{figure}
 
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/10.jpg}
+	\caption{(a) A $600 \times 400$ hazy image and the recovered scene radiance using (b) $3 \times 3$ and (c) $15 \times 15$ patches, respectively (without soft matting). The recovered scene radiance is oversaturated for a small patch size, while it contains apparent halos for a large patch size.}\label{fig:10}
+\end{figure}
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/11.jpg}
+	\caption{Recovering images using different patch sizes (after soft matting). (a) Input hazy images. (b) Using $3 \times 3$ patches. (c) Using $15 \times 15$ patches. (d) Using $30 \times 30$ patches.}\label{fig:11}
+\end{figure}
 
 \section{实验结果}
+在我们的实验当中，我们使用了van Herk的快速算法\cite{Herk1992}来实现求出局部区域最小值的操作，该算法的时间复杂度为图像面积的线性阶。对一幅$600 \times 400$的图像我们使用了$15 \times 15$的卷积核。在软抠图（soft matting）中，我们使用了预处理共轭梯度（Preconditioned Conjugate Gradient）（PCG）算法求解。在一台处理器为3.0 GHz的Intel Pentium 4 Processor的PC机上处理一幅$600 \times 400$的图像，用了大约0-20秒。\par
+
+图\ref{fig:01}和\ref{fig:12}显示了我们的去雾结果以及复原得到的深度图。该深度图是由方程(\ref{equ:2})计算得出，其结果依赖于一个未知比例的参数$\beta$。这些图像的大气光均是通过\ref{sec:4.3}节中所提到的方法自动测得的（图\ref{fig:12}中红色长方形标注）。可以看到，即使实在雾浓度较大的地方，我们的算法也能较好地得到一些细节的信息并且还原出生动的彩色图像。同时得到的深度图也和输入图像保持一致。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/12.jpg}
+	\caption{Haze removal results. (a) Input hazy images. (b) Restored haze-free images. (c) Depth maps. The red rectangles in the top row indicate where our method automatically obtains the atmospheric light.}\label{fig:12}
+\end{figure}
+
+我们的算法在有足够阴影的灰度图上也有效。城市风光图通常满足这一条件。在这种情况下，我们对所有推导做求最小值运算$\min_c$。图\ref{fig:13}展示了一个例子。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/13.jpg}
+	\caption{A gray-scale image example. (a) Input image. (b) Our result. (c) Our recovered depth map.}\label{fig:13}
+\end{figure}
+
+在图\ref{fig:14}中，我们对我们的方法与Tan的工作\cite{Tan2008}进行了比较，他的处理结果的一些色彩经常会出现过度饱和，因为最大化对比度导致高估雾层。我们的方法在结构上复原的同时没有牺牲色彩的真实度(比如天鹅)。我们的结果里也很少有明显的晕影。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/14.jpg}
+	\caption{Comparison with Tan’s work \cite{Tan2008}. (a) Input image. (b) Tan’s result. (c) Our result.}\label{fig:14}
+\end{figure}
+
+然后，我们又与Fattal的工作进行了比较。在图\ref{fig:08}中，我们的结果可以比得上和Fattal的结果。图\ref{fig:15}中显示了在浓雾情况下我们的方法优于Fattal的。Fattal的方法是基于统计学的，需要充足的颜色信息以及差异性。当雾很浓时，颜色很微弱，差异也不够明显，他的评估透射率的方法就不可靠了。图\ref{fig:15}b和\ref{fig:15}c显示了MRF模型建立前后他的结果的不同。由于只有部分的透射能被可靠地复原，即使在模型建立之后，一些区域还是太灰暗（山峰），还有一些雾没有被移除（城市景观的较远处）。与之相反，我们的实现在这两个方面都有理想的结果（图\ref{fig:15}d）。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/15.jpg}
+	\caption{More comparisons with Fattal’s work \cite{Fattal2008}. (a) Input images. (b) Results before extrapolation, using Fattal’s method. The transmission is not estimated in the black regions. (c) Fattal’s results after extrapolation. (d) Our results.}\label{fig:15}
+\end{figure}
+
+我们还和
+
+Kopf et al.\cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}最近的工作进行了比较，如图所示。为了去雾他们利用了3D模型和景物的纹理贴图。这些附加的信息可能来自Google Earth和一些卫星图片。然而，我们的技术可以从单一图像中产生与之媲美的去雾结果，而不需要借助任何几何学的信息。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/16.jpg}
+	\caption{Comparison with Kopf et al.’s work \cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}. (a)-(d) Input image, Kopf et al.’s result, our result, and our recovered depth map, respectively.}\label{fig:16}
+\end{figure}
+
+在图\ref{fig:17}中我们进一步比较了我们的算法和更多以前的算法。图\ref{fig:17}e展示了Photoshop的自动曲线函数（auto curve function）的结果。它相当于对每个颜色通道分别应用黑体减法（dark-object subtraction method）\cite{Chavez1988}。因为这个算法是设计来去除空间一致的雾的，当图像的深度不定时，它只能去除最近物体的一层薄雾。图\ref{fig:17}f和图\ref{fig:17}g是Fhotoshop的钝化（Unsharp Mask）和经典直方图均衡算法，这两个算法被广泛用于对比度增强技术。但是当景深不均匀时，增强应该是空间不一致的。这些技术不能决定增强的程度。此外，由于他们不是基于雾图生成模型，他们无法给出深度图。\par
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/17.jpg}
+	\caption{Comparison with other methods. (a) Input image. (b) Kopf et al.’s result \cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}. (c) Tan’s result \cite{Tan2008}. (d) Fattal’s result \cite{Fattal2008}. (e) Photoshop’s auto curve. (f) Photoshop’s Unsharp Mask. (g) Histogram equalization. (h) Our result. (i) Our recovered depth map.}\label{fig:17}
+\end{figure}
+
 
 \section{讨论}
+在这篇论文中，我们提出了一个简单但是有效的叫做暗通道先验的方法来为单一输入图像去雾。暗通道先验来自于对户外无雾图像的统计。通过结合先验和雾图生成模型，可以使单图像去雾变得更加简单高效。\par
+
+因为暗通道先验是一种统计结果，在一些特定的图片上面可能不起作用。当取景对象本身颜色与大气光相似或者上面没有投影（比如图\ref{fig:18}中的白色大理石），暗原色先验将失效。景物光线的暗通道的亮度值接近这些物体。因此我们的模型会低估这些物体的透射率，并高估雾层。\par
+
+此外，因为我们的方法基于雾图模型(\ref{equ:1}),可能会因为模型在现实中失效而失败。首先，当太阳光影响太强的时候，恒定大气光假设可能不再合适。在图\ref{fig:19}a中，大气光在左侧明亮，右侧阴暗。我们自动估算的$A$（图\ref{fig:19}c）可能不是其他区域的真实$A$值，所以右边复原的天空区域要比实际的更暗（图\ref{fig:19}b）。更高级的模型\cite{PreethamShirleySmits1999}可以用来描述更复杂的情况。其次，当大气杂质很小（比如薄雾）或者物体在几公里之外\cite{NarasimhanNayar2003_1}，透射率$t$会具有波长依赖性。在这个情况下，不同颜色通道的透射率会不一样。这也是为什么靠近地平线的物体会变成灰蓝色（图\ref{fig:19}a）。因为雾图模型(\ref{equ:1})假设所有颜色通道有共同的透射率，我们的算法可能无法还原出远物的真实图像，而且他们依然是灰蓝色的。我们把这个问题留给后续的研究。
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/18.jpg}
+	\caption{Failure of the dark channel prior. (a) Input image. (b) Our result. (c) Our transmission map. The transmission of the marble is underestimated.}\label{fig:18}
+\end{figure}
+
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=\textwidth]{img/19.jpg}
+	\caption{Failure of the haze imaging model. (a) Input image. (b) Our result. (c) Dark channel. Red pixels indicate where the atmospheric light is estimated. (d) Estimated transmission map.}\label{fig:19}
+\end{figure}
 
 
 \bibliographystyle{unsrt}
