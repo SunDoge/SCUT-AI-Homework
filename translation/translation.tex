@@ -240,9 +240,11 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 其中$U$是一个和$L$大小相等的单位矩阵。我们给$\lambda$设置一个很小的值（在我们的实验中为10^{-4}），因此$t$被$\tilde{t}$轻微约束。\par
 
+\cite{LevinLischinskiWeiss2006}中得出的matting Laplacian matrix基于\emph{颜色线假设}（\emph{color line assumption}）：一个小的局部区域中的前景/背景色在RGB颜色空间中共线。color line assumption在去雾问题中同样成立。首先，场景光线$J$是自然图像。根据\cite{LevinLischinskiWeiss2006}，\cite{OmerWerman2004}，color line model包含自然图像。其次，大气光$A$是常数，所以满足假设。因此，在去雾问题中把matting Laplacian matrix作为平滑项是合理的。\par
 
+相似形式的matting框架也是被Hsu et al应用。\cite{HsuMertensParisAvidanDurand2008}用来处理空间移变白平衡问题（spatially variant white balance problem）。在\cite{GilchristJacobsen1983}，\cite{OmerWerman2004}约束一些稀疏区域已知，而且这个框架主要用于推导未知区域的值。在我们的程序中，粗约束$\tilde{t}$已经布满整个图片。我们认为这个约束是弱约束，并使用matting框架来优化分布图。\par
 
-
+解完线性系统\ref{equ:17}之后，我们在$t$上使用双边滤波器来平滑他的细微纹理。图\ref{fig:06}c展示了使用图\ref{fig:06}b作为约束的优化结果。我们可以看见，光晕和块状痕迹减少了。优化过的透射率分布设法捕捉到不连贯的尖锐边缘并描绘出物体的轮廓。\par
 
 \subsection{估算大气光}\label{sec:4.3}
 
