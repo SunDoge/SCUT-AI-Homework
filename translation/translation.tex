@@ -17,15 +17,15 @@
 \end{abstract}
 
 \section{引言}
-户外场景的图像通常会因为大气中浑浊的介质（比如灰尘、水汽）而降低质量。霾、雾、烟都是大气吸收和散射而形成的现象。照相机接收到景物反射过来的光线经过了衰减。此外，得到的光线还混合有\emph{大气光}\cite{Koschmieder1924}——经大气分子反射的周围环境的光线。被降低质量的图像的对比度和颜色的保真度有所下降，如图\ref{fig:01}a所示。由于大气散射的程度和景点到照相机的距离有关，图像质量降低程度是随着空间变化的。\par
+户外场景的图像通常会因为大气中浑浊的介质（比如灰尘、水汽）而降低质量。霾、雾、烟都是大气吸收和散射光而形成的现象。照相机接收到景物反射过来的光线经过了衰减。此外，得到的光线还混合有\emph{大气光}\cite{Koschmieder1924}——经大气分子反射的周围环境的光线。被降低质量的图像的对比度和颜色的保真度有所下降，如图\ref{fig:01}a所示。由于大气散射的程度和景点到照相机的距离有关，图像质量降低程度是随着空间变化的。\par
 
-Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和大气颗粒浓度上不同。详情见\cite{NarasimhanNayar2002}。在这篇文章中我们不区分他们相似的现象，并且为了方便统一使用术语\emph{haze removal }。} (or dehazing，去雾)在消费／计算摄影业和计算机视觉领域有着广泛的需求。首先，去雾可以显著地提高景物的清晰度并且改正大气光带来的色偏。一般来说，无雾的图片看起来更加舒服。其次，大多数的计算机视觉算法，从低级别的图像分析，到高级别的目标识别，通常会假设输入图像（经过校准）是景物的场景光（scene radiance不好翻译）。视觉算法（例如特征检测、滤波、光度分析等）的实现会不可避免地受到来自有偏的和低对比度的场景光的困扰。最后，去雾可提供图像的深度信息，有助于许多视觉算法和高级的图像编辑。雾和霾可以作为有用的深度的线索来加深人们对景像的理解。一个有雾的不好的图像也可以有好的用处。\par
+Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和大气颗粒浓度上不同。详情见\cite{NarasimhanNayar2002}。在这篇文章中我们不区分他们相似的现象，并且为了方便统一使用术语\emph{haze removal }。} (or dehazing，去雾)在消费／计算摄影和计算机视觉领域有着广泛的需求。首先，去雾可以显著地提高景物的清晰度并且改正大气光带来的色偏。一般来说，无雾的图片看起来更加舒服。其次，大多数的计算机视觉算法，从低级别的图像分析，到高级别的目标识别，通常会假设输入图像（经过校准）是景物的场景光（scene radiance不好翻译）。视觉算法（例如特征检测、滤波、光度分析等）的实现会不可避免地受到来自有偏的和低对比度的场景光的困扰。最后，去雾可提供图像的深度信息，有助于许多视觉算法和高级的图像编辑。雾和霾可以作为有用的深度线索来加深人们对景像的理解。一个有雾的不好的图像也可以有好的用处。\par
 
 然而，去雾是一项有挑战性的问题，因为雾所依赖的深度信息是未知的。如果只有单个有雾图像，问题的约束就会变得过少。因此，很多使用多张图像或额外信息的去雾方法被提出。基于偏振光的方法\cite{SchechnerNarasimhanNayar2001}，\cite{ShwartzNamerSchechner2006}通过不同偏振角拍摄的两张或多张图片来去除雾霾的影响。在\cite{NarasimhanNayar2000}，\cite{NayarNarasimhan1999}，\cite{NarasimhanNayar2003_1}里通过从同一场景在不同天气情况下的拍摄的多张照片获得更多约束。基于深度的方法\cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}，\cite{NarasimhanNayar2003_2}需要一些来自用户输入或已知3D模型的深度信息。\par
 
 最近，基于单一图像的去雾取得了很大的进展\cite{Fattal2008}，\cite{Tan2008}。这些方法的成功得益于更强的先验和假设。Tan\cite{Tan2008}观察到无雾图像比有雾图像具有更高的对比度，他通过扩大复原图像的局部对比度来达到去雾的效果。这样得到的结果在视觉上是很吸引人的，但可能不是实际有效的。Fattal\cite{Fattal2008}通过假设透射率和表面投影在局部是不相关的，估算景物的反照率（albedo）和介质透射率（medium transmission）。这个方法是实际有效的，可以得到令人印象深刻的结果。然而他的方法在雾霾浓度较大的时候显得无能为力，而且在假设不成立的情况下可能会失败。\par
 
-在这篇文章，我们提出一种新的先验规律——暗通道先验，来实现单一图像去雾。暗通道先验是基于户外无雾图像的统计得出的规律。我们发现，在不包括天空的绝大部分局部区域，总会存在一些像素（我们称之为“sdark pixels”），至少在一个颜色通道上具有很低的强度值。在有雾图像中，这些颜色通道中的暗像素的强度来自于大气光。因此，这些暗像素能够直接用来评估雾的透射率。结合一个雾成像模型和soft matting插值法，我们可以修复出高质量的去雾图像并得到很好的深度图。\par
+在这篇文章，我们提出一种新的先验规律——\emph{暗通道先验}，来实现单一图像去雾。暗通道先验是基于户外无雾图像的统计得出的规律。我们发现，在不包括天空的绝大部分局部区域，总会存在一些像素（我们称之为\emph{暗像素(dark pixels)}），至少在一个颜色通道上具有很低的强度值。在有雾图像中，这些颜色通道中的暗像素的强度来自于大气光。因此，这些暗像素能够直接用来评估雾的透射率。结合一个雾成像模型和soft matting插值法，我们可以修复出高质量的去雾图像并得到很好的深度图。\par
 
 我们实现的去雾不仅是实际有效的，而且能够处理在雾浓度很大情况下的远距离物体。我们没有依靠透射率或表面投影的显著变化。结果基本没有光晕。\par
 
@@ -148,7 +148,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 我们进一步假设在局部区域的$\Omega(x)$是常数。我们用$\tilde{t}(x)$来表示这个透射率，然后我们在等式(\ref{equ:7})的两边同时计算暗通道，两边都求最小值：
 
 \begin{equation}\label{equ:8}
-	\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c}) = \tilde{t}(x) \min_{y \in \Omega(x)} (\min_c \frac{J^c(y)}{A^c}) + 1 - \tilde{t}(x)
+	\min_{y \in \Omega(x)} (\min_c \frac{I^c(y)}{A^c}) = \tilde{t}(x) \min_{y \in \Omega(x)} (\min_c \frac{J^c(y)}{A^c}) + 1 - \tilde{t}(x).
 \end{equation}
 
 因为$\tilde{t}(x)$在这个区域是一个常数，可以把它放在求最小值运算外。\par
@@ -242,7 +242,7 @@ Haze removal\footnote{Haze, fog, and smoke主要在材质、尺寸、形状和�
 
 \cite{LevinLischinskiWeiss2006}中得出的matting Laplacian matrix基于\emph{颜色线假设}（\emph{color line assumption}）：一个小的局部区域中的前景/背景色在RGB颜色空间中共线。color line assumption在去雾问题中同样成立。首先，场景光线$J$是自然图像。根据\cite{LevinLischinskiWeiss2006}，\cite{OmerWerman2004}，color line model包含自然图像。其次，大气光$A$是常数，所以满足假设。因此，在去雾问题中把matting Laplacian matrix作为平滑项是合理的。\par
 
-相似形式的matting框架也是被Hsu et al应用。\cite{HsuMertensParisAvidanDurand2008}用来处理空间移变白平衡问题（spatially variant white balance problem）。在\cite{GilchristJacobsen1983}，\cite{OmerWerman2004}约束一些稀疏区域已知，而且这个框架主要用于推导未知区域的值。在我们的程序中，粗约束$\tilde{t}$已经布满整个图片。我们认为这个约束是弱约束，并使用matting框架来优化分布图。\par
+相似形式的matting框架也是被Hsu et al应用。\cite{HsuMertensParisAvidanDurand2008}用来处理空间移变白平衡问题（spatially variant white balance problem）。在\cite{LevinLischinskiWeiss2006}，\cite{HsuMertensParisAvidanDurand2008}约束一些稀疏区域已知，而且这个框架主要用于推导未知区域的值。在我们的程序中，粗约束$\tilde{t}$已经布满整个图片。我们认为这个约束是弱约束，并使用matting框架来优化分布图。\par
 
 解完线性系统(\ref{equ:17})之后，我们在$t$上使用双边滤波器\cite{TomasiManduchi1998}来平滑他的细微纹理。图\ref{fig:06}c展示了使用图\ref{fig:06}b作为约束的优化结果。我们可以看见，光晕和块状痕迹减少了。优化过的透射率分布设法捕捉到不连贯的尖锐边缘并描绘出物体的轮廓。\par
 
@@ -363,9 +363,7 @@ $t_0$的一个典型值是0.1。由于场景光线的亮度通常不及大气光
 	\caption{More comparisons with Fattal’s work \cite{Fattal2008}. (a) Input images. (b) Results before extrapolation, using Fattal’s method. The transmission is not estimated in the black regions. (c) Fattal’s results after extrapolation. (d) Our results.}\label{fig:15}
 \end{figure}
 
-我们还和
-
-Kopf et al.\cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}最近的工作进行了比较，如图所示。为了去雾他们利用了3D模型和景物的纹理贴图。这些附加的信息可能来自Google Earth和一些卫星图片。然而，我们的技术可以从单一图像中产生与之媲美的去雾结果，而不需要借助任何几何学的信息。\par
+我们还和Kopf et al.\cite{KopfNeubertChenCohenCohenOrDeussenUyttendaeleLischinski2008}最近的工作进行了比较，如图所示。为了去雾他们利用了3D模型和景物的纹理贴图。这些附加的信息可能来自Google Earth和一些卫星图片。然而，我们的技术可以从单一图像中产生与之媲美的去雾结果，而不需要借助任何几何学的信息。\par
 
 \begin{figure}[tbp]
 	\centering
